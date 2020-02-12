@@ -21,6 +21,21 @@ export default class App extends Component {
     filter: '',
   };
 
+componentDidMount() {
+    const addedContacts = localStorage.getItem('contacts');
+
+    if (addedContacts) {
+        this.setState({ contacts: JSON.parse(addedContacts) });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   handleSubmitContact = contact => {
     const contactToAdd = {
       ...contact,
@@ -40,8 +55,9 @@ export default class App extends Component {
   };
 
   deleteContact = id => {
+    const contactId = this.state.contacts.filter(contact => contact.id !== id);
     this.setState(state => ({
-      contacts: state.contacts.filter(contact => contact.id !== id),
+      contacts: contactId,
     }));
   };
 
